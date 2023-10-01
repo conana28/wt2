@@ -95,6 +95,9 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
                 <DropdownMenuItem asChild>
+                  <Link href="/wine">Add Wine</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link href="/">Home</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
