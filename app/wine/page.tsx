@@ -1,25 +1,33 @@
-import React from "react";
-import { getWines } from "@/lib/wine";
 import Container from "@/components/ui/container";
+import { DataTable } from "./data-table";
+import { columns } from "./columns";
+import { getWines } from "@/lib/wine";
 
 export default async function Wine() {
   const { wines } = await getWines();
-  // console.log(wines);
+
+  const winesWithCostAsNumber = wines?.map((wine: any) => {
+    return {
+      ...wine,
+      cost: wine.bottle?.cost?.toNumber() || 0,
+    };
+  });
 
   return (
-    <>
-      <Container>
-        <div className="p-4 sm:p-6 lg:p-8 ">
-          <h2 className="mt-2 border-b pb-2 text-xl font-semibold">Wines:</h2>
-          <ul className="mt-4 flex flex-col gap-1">
-            {wines?.map((wine) => (
-              <li key={wine.id}>
-                {wine.producer} {wine.wineName} {wine.bottle.length}
-              </li>
-            ))}
-          </ul>
+    <Container>
+      <div className="p-4 sm:p-6 lg:p-8 ">
+        <h2 className="mt-2 border-b pb-2 text-xl font-semibold">Wines:</h2>
+
+        <div className="container mx-auto py-10">
+          <DataTable
+            columns={columns}
+            data={JSON.parse(JSON.stringify(winesWithCostAsNumber || []))}
+          />
+          {/* In this implementation, the JSON.stringify and JSON.parse methods are used to convert the list of wines 
+          with the cost property as a plain JavaScript number to a plain object before passing it to the DataTable component. 
+          This ensures that the Decimal object is not passed to the client component, which would trigger the warning message. */}
         </div>
-      </Container>
-    </>
+      </div>
+    </Container>
   );
 }

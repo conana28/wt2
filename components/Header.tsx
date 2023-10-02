@@ -55,7 +55,7 @@ const Header = () => {
                 <Separator className="my-4" />
                 <nav className="flex flex-col gap-4">
                   {routes.map((route, i) => (
-                    <SheetClose asChild>
+                    <SheetClose asChild key={route.href}>
                       <Link
                         key={i}
                         href={route.href}
@@ -72,19 +72,7 @@ const Header = () => {
               <h1 className="text-xl font-bold"> WineTrak-2</h1>
             </Link>
           </div>
-          {/* <nav className="mx-6 flex items-center space-x-4 lg:space-x-6 hidden md:block">
-            {routes.map((route, i) => (
-              <Button asChild variant="ghost">
-                <Link
-                  key={i}
-                  href={route.href}
-                  className="text-sm font-medium transition-colors"
-                >
-                  {route.label}
-                </Link>
-              </Button>
-            ))}
-          </nav> */}
+
           <nav className="mx-6 flex items-center space-x-4 lg:space-x-6 hidden md:block">
             <DropdownMenu>
               {/* <DropdownMenuTrigger asChild> */}
