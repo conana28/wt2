@@ -23,6 +23,8 @@ import {
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Separator } from "./ui/separator";
+import { Input } from "./ui/input";
+import Search from "./Search";
 
 const Header = () => {
   const { theme, setTheme } = useTheme();
@@ -74,42 +76,46 @@ const Header = () => {
           </div>
 
           <nav className="mx-6 flex items-center space-x-4 lg:space-x-6 hidden md:block">
-            <DropdownMenu>
-              {/* <DropdownMenuTrigger asChild> */}
-              <DropdownMenuTrigger>
-                <Button variant="ghost" size="xs">
-                  Wine
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
-                <DropdownMenuItem asChild>
-                  <Link href="/wine">Add Wine</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/">Home</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/test">Test</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <span className="flex space-x-2">
+              <Search />
+              <DropdownMenu>
+                {/* <DropdownMenuTrigger asChild> */}
+                <DropdownMenuTrigger>
+                  <Button variant="ghost" size="xs">
+                    Wine
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem asChild>
+                    <Link href="/wine">Add Wine</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/">Home</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/test">Test</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Button variant="ghost" size="xs">
-                  Cellar
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
-                <DropdownMenuItem asChild>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Button variant="ghost" size="xs">
+                    Cellar
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  {/* <DropdownMenuItem asChild>
                   <Link href="/">Home</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/test">Test</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                </DropdownMenuItem> */}
+                  <DropdownMenuItem asChild>
+                    <Link href="/test">Test</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </span>
           </nav>
+
           <div className="flex items-center">
             <Button
               variant="ghost"

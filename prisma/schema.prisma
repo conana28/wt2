@@ -29,7 +29,7 @@ model Bottle {
   vintage   Int       @default(0)
   rack      String
   shelf     String?
-  cost      Decimal?
+  cost      Int?
   consume   DateTime?
   occasion  String?
   createdAt DateTime  @default(now())

@@ -1,9 +1,8 @@
-// "use client";
-
+"use client";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Bottle } from "@prisma/client";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+
+import { Context } from "./show-table";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -51,6 +52,10 @@ export const columns: ColumnDef<WineData>[] = [
     header: "Bottles",
   },
   {
+    accessorKey: "id",
+    header: "Id",
+  },
+  {
     id: "actions",
     header: () => <div className="text-right">Actions</div>,
     // cell: ({ row }) => {
@@ -61,6 +66,8 @@ export const columns: ColumnDef<WineData>[] = [
       const [openEditModal, setOpenEditModal] = useState(false);
       const [openAddModal, setOpenAddModal] = useState(false);
       const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+      const { show, setShow, setWine } = useContext(Context);
 
       return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -73,20 +80,59 @@ export const columns: ColumnDef<WineData>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DialogTrigger asChild>
-                <DropdownMenuItem onClick={() => setOpenEditModal(true)}>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setShow("E");
+                    setWine(row.original);
+                  }}
+                >
                   Edit
                 </DropdownMenuItem>
               </DialogTrigger>
               <DialogTrigger asChild>
-                <DropdownMenuItem onClick={() => setOpenAddModal(true)}>
-                  Add
+                {/* <DropdownMenuItem onClick={() => setOpenAddModal(true)}> */}
+                <DropdownMenuItem
+                  onClick={() => {
+                    setShow("A");
+                    setWine(row.original);
+                  }}
+                >
+                  Add Like
                 </DropdownMenuItem>
               </DialogTrigger>
               <DialogTrigger asChild>
-                <DropdownMenuItem onClick={() => setOpenDeleteModal(true)}>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setShow("D");
+                    setWine(row.original);
+                  }}
+                >
                   Delete
                 </DropdownMenuItem>
               </DialogTrigger>
+
+              <DialogTrigger asChild>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setShow("S");
+                    setWine(row.original);
+                  }}
+                >
+                  Show bottles
+                </DropdownMenuItem>
+              </DialogTrigger>
+
+              <DialogTrigger asChild>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setShow("B");
+                    setWine(row.original);
+                  }}
+                >
+                  Add bottle
+                </DropdownMenuItem>
+              </DialogTrigger>
+
               {/* <DialogTrigger asChild>
                 <DropdownMenuItem onClick={() => setWhichDialog("view")}>
                   View wine details
@@ -112,6 +158,8 @@ export const columns: ColumnDef<WineData>[] = [
             />
           )} */}
 
+          {/* {show && openAddModal && <ShowCard />} */}
+
           {/* {open && openAddModal && (
             <AddWineModal
               isOpen={openAddModal}
@@ -131,9 +179,4 @@ export const columns: ColumnDef<WineData>[] = [
       );
     },
   },
-
-  // {
-  //   accessorKey: "bottle[0].cost",
-  //   header: "Id",
-  // },
 ];
