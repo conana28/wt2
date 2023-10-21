@@ -48,12 +48,12 @@ export function ShowCard({ formType, id }: CharacterDisplayProps) {
   return (
     <Card className="dark:bg-slate-900">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className="-mt-2">{title}</CardTitle>
         <CardDescription>
           {wine.producer} {wine.wineName}{" "}
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="-mt-4">
         {formType === "A" && <WineForm formType={formType} id={id} />}
         {formType === "E" && <WineForm formType={formType} id={id} />}
         {formType === "D" && <DeleteCard />}

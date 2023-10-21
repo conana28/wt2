@@ -18,12 +18,19 @@ export const WineFormDataSchema = z.object({
   type: z.string().optional(),
 });
 
+export const BottleSearchSchema = z.object({
+  search: z.string().optional(),
+  vintage: z.coerce.number().optional(),
+  country: z.string().optional(),
+  rack: z.string().optional(),
+});
+
 export const BottleFormSchema = z.object({
-  vintage: z.number().min(1970, "Vintage is required."),
+  vintage: z.coerce.number().min(1970, "Vintage is required."),
   rack: z.string().min(1, "Rack name is required."),
   shelf: z.string().optional(),
-  cost: z.number().optional(),
-  qty: z.number().min(1, "Qty must be 1 or more"),
+  cost: z.coerce.number().optional(),
+  qty: z.coerce.number().min(1, "Qty must be 1 or more"),
 });
 
 export const BottleFormSchema1 = z.object({
@@ -31,4 +38,9 @@ export const BottleFormSchema1 = z.object({
   rack: z.string().min(1, "Rack name is required."),
   shelf: z.string().optional(),
   cost: z.coerce.number().optional(),
+});
+
+export const BottleConsumeFormSchema = z.object({
+  consume: z.date(),
+  occasion: z.string().optional(),
 });

@@ -16,10 +16,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { BottleFormSchema } from "@/lib/schema";
-import { addWine, updateWine } from "@/app/actions_wine";
 import { useContext } from "react";
 import { Context } from "./show-table";
-import { Edit } from "lucide-react";
 import { addBottle } from "@/app/actions_bottle";
 
 type BottleFormValues = z.infer<typeof BottleFormSchema>;
@@ -45,18 +43,36 @@ export function BottleForm({ formType, id }: BottleFormProps) {
 
   async function onSubmit(data: BottleFormValues) {
     console.log("Submit ", data);
-    const result = await addBottle(data);
 
-    if (!result) {
-      alert("Something went wrong - Add Wine");
-      return;
+    if (data.qty === 1) {
+      const result = await addBottle(data, id);
+
+      if (!result) {
+        alert("Something went wrong - Add Wine");
+        return;
+      }
+    } else if (data.qty > 1) {
+      const results = await Promise.all(
+        Array.from({ length: data.qty }, () => addBottle(data, id))
+      );
+
+      if (results.some((result) => !result)) {
+        alert("Something went wrong - Add Multiple Wine");
+        return;
+      }
     }
 
-    if (result.error) {
-      // set local error state
-      alert(result.error);
-      return;
-    }
+    // const result = await addBottle(data, id);
+    // if (!result) {
+    //   alert("Something went wrong - Add Wine");
+    //   return;
+    // }
+
+    // if (result.error) {
+    //   // set local error state
+    //   alert(result.error);
+    //   return;
+    // }
 
     setShow("");
     form.reset();

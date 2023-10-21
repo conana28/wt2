@@ -14,7 +14,7 @@ const Search = () => {
   const handleSearch = () => {
     // Perform search with searchTerm
     // console.log(`Searching for "${searchTerm}"...`);
-    router.push(`/testp/${searchTerm}`);
+    router.push(`/wine/${searchTerm}`);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

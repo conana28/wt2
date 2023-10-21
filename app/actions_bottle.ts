@@ -1,15 +1,19 @@
 "use server";
 
 import { z } from "zod";
-import { BottleFormSchema1, WineSearchSchema } from "@/lib/schema";
+import {
+  BottleFormSchema1,
+  BottleSearchSchema,
+  BottleConsumeFormSchema,
+} from "@/lib/schema";
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-type Inputs = z.infer<typeof WineSearchSchema>;
+type Inputs = z.infer<typeof BottleSearchSchema>;
 
 export async function searchBottles(data: Inputs) {
-  const result = WineSearchSchema.safeParse(data);
+  const result = BottleSearchSchema.safeParse(data);
   // console.log(result);
   if (result.success) {
     // console.log(result.data);
@@ -31,12 +35,30 @@ export async function searchBottles(data: Inputs) {
                 },
               },
             ],
+            AND: [
+              {
+                country: {
+                  contains: result.data.country,
+                  mode: "insensitive",
+                },
+              },
+            ],
           },
 
+          rack: {
+            contains: result.data.rack,
+            mode: "insensitive",
+          },
+
+          // vintage: {
+          //   equals: result.data.vintage,
+          // },
+          // You can use "equals" to filter by a specific rack, or "equals" or "in" for an array of racks.
           consume: {
             equals: null,
           },
         },
+
         select: {
           id: true,
           vintage: true,
@@ -48,8 +70,12 @@ export async function searchBottles(data: Inputs) {
               id: true,
               producer: true,
               wineName: true,
+              country: true,
             },
           },
+        },
+        orderBy: {
+          vintage: "asc",
         },
       });
 
@@ -87,7 +113,7 @@ export async function addBottle(data: In, id: number) {
       },
     });
     // Revalidate data
-    revalidatePath("/");
+    revalidatePath("/bottle/kkkk");
     return { success: true, data: result.data };
   }
 
@@ -115,18 +141,39 @@ export async function updateBottle(data: In, id: number) {
     revalidatePath("/");
     return { success: true, data: result.data };
   }
+}
+export async function consumeBottle(
+  data: z.infer<typeof BottleConsumeFormSchema>,
+  id: number
+) {
+  const result = BottleConsumeFormSchema.safeParse(data);
+  console.log("Parse", result);
+
+  if (result.success) {
+    // Add to DB
+    const btl = await prisma.bottle.update({
+      where: { id },
+      data: {
+        consume: result.data.consume,
+        occasion: result.data.occasion,
+      },
+    });
+    // Revalidate data
+    revalidatePath("/");
+    return { success: true, data: result.data };
+  }
 
   if (result.error) {
     return { success: false, error: result.error.format() };
   }
 }
 
-// export async function deleteWine(id: number) {
-//   try {
-//     await prisma.wine.delete({ where: { id } });
-//     revalidatePath("/");
-//     return { success: true };
-//   } catch (error) {
-//     return { success: false, error };
-//   }
-// }
+export async function deleteBottle(id: number) {
+  try {
+    await prisma.bottle.delete({ where: { id } });
+    // revalidatePath("/");
+    return { success: true };
+  } catch (error) {
+    return { success: false, error };
+  }
+}

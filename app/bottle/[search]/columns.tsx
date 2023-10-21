@@ -2,7 +2,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { Bottle } from "@prisma/client";
 import { useContext, useState } from "react";
 import {
   DropdownMenu,
@@ -14,22 +13,6 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { BottleContext, TBottle } from "./show-table";
-
-// import { Context } from "./show-table";
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-// export type WineData = {
-//   id: number;
-//   producer: string;
-//   wineName: string;
-//   country: string;
-//   region: string;
-//   subRegion: string | null;
-//   type: string | null;
-//   bottle: Array<Bottle | []>;
-//   // bottle: Array<Bottle>;
-// };
 
 export const columns: ColumnDef<TBottle>[] = [
   {
@@ -65,14 +48,16 @@ export const columns: ColumnDef<TBottle>[] = [
     accessorFn: (row) =>
       `${row.vintage} ${row.wine.producer} ${row.wine.wineName}`,
   },
-  // {
-  //   accessorKey: "vintage",
-  //   header: "Vintage",
-  // },
+
   {
     accessorKey: "rack",
     header: "Rack",
   },
+  // {
+  //   id: "country",
+  //   header: "Country",
+  //   accessorFn: (row) => `${row.wine.country} `,
+  // },
   {
     accessorKey: "shelf",
     header: "Shelf",
@@ -150,7 +135,7 @@ export const columns: ColumnDef<TBottle>[] = [
                   Consume
                 </DropdownMenuItem>
               </DialogTrigger>
-              <DialogTrigger asChild>
+              {/* <DialogTrigger asChild>
                 <DropdownMenuItem
                   onClick={() => {
                     setShow("M");
@@ -159,7 +144,7 @@ export const columns: ColumnDef<TBottle>[] = [
                 >
                   Move
                 </DropdownMenuItem>
-              </DialogTrigger>
+              </DialogTrigger> */}
 
               {/* <DropdownMenuSeparator /> */}
             </DropdownMenuContent>

@@ -40,13 +40,13 @@ export const columns: ColumnDef<WineData>[] = [
   // },
   {
     id: "name",
-    header: "Wine",
+    header: "Matching wine",
     accessorFn: (row) => `${row.producer} ${row.wineName}`,
   },
-  {
-    accessorKey: "country",
-    header: "Country",
-  },
+  // {
+  //   accessorKey: "country",
+  //   header: "Country",
+  // },
   {
     accessorKey: "bottle.length",
     header: "Bottles",

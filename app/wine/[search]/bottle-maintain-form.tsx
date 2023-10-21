@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,82 +17,43 @@ import {
 import { Input } from "@/components/ui/input";
 import { BottleFormSchema1 } from "@/lib/schema";
 import { useContext } from "react";
-import { BottleContext, TBottle } from "./show-table";
+import { Context } from "./show-table";
 import { addBottle, updateBottle } from "@/app/actions_bottle";
+import { Bottle } from "@prisma/client";
 
 type BottleFormValues = z.infer<typeof BottleFormSchema1>;
 
 interface BottleFormProps {
-  formType: string;
-  id: number; // wine id
-  btlSelect: TBottle[];
-  setToggle: (toggle: boolean) => void;
-  toggle: boolean;
+  btl: Bottle | null;
+  setOpenDialog: (b: boolean) => void;
 }
 
-export function BottleForm({
-  formType,
-  id,
-  btlSelect,
-  setToggle,
-  toggle,
-}: BottleFormProps) {
-  const router = useRouter();
-
-  const { show, setShow, bottle } = useContext(BottleContext);
-  console.log("BF Id: ", id);
-  let defaultValues: Partial<BottleFormValues>;
-  if (formType === "A") {
-    defaultValues = {
-      vintage: 2020,
-      rack: "",
-      shelf: "",
-      cost: 0,
-    };
-  } else {
-    defaultValues = {
-      vintage: bottle.vintage,
-      rack: bottle.rack,
-      shelf: bottle.shelf === null ? undefined : bottle.shelf,
-      cost: bottle.cost === null ? undefined : bottle.cost,
-    };
-  }
-
+export function BottleMaintainForm({ btl, setOpenDialog }: BottleFormProps) {
+  const { show, setShow, wine } = useContext(Context);
+  const defaultValues: Partial<BottleFormValues> = {
+    vintage: btl?.vintage,
+    rack: btl?.rack,
+    shelf: btl?.shelf === null ? undefined : btl?.shelf,
+    cost: btl?.cost === null ? undefined : btl?.cost,
+  };
   const form = useForm<BottleFormValues>({
     resolver: zodResolver(BottleFormSchema1),
     defaultValues,
   });
 
   async function onSubmit(data: BottleFormValues) {
-    console.log("Submit ", data, btlSelect);
-    let result;
-    if (formType === "A") {
-      result = await addBottle(data, id);
-    } else {
-      if (btlSelect.length === 0) {
-        result = await updateBottle(data, id);
-      } else {
-        btlSelect.forEach(async (btl) => {
-          result = await updateBottle(data, btl.id);
-        });
+    console.log("Submit ", data);
+
+    if (btl) {
+      const result = await updateBottle(data, btl.id);
+
+      if (!result) {
+        alert("Something went wrong - Add Wine");
+        return;
       }
     }
 
-    // if (!result) {
-    //   alert("Something went wrong - Add/Edit Bottle");
-    //   return;
-    // }
-    console.log("Result: ", result);
-    // if (result?.error) {
-    //   // set local error state
-    //   alert(result?.error);
-    //   return;
-    // }
-
-    setShow("");
-    setToggle(!toggle);
-    form.reset();
-    // router.push("/bottle/p");
+    setOpenDialog(false);
   }
 
   return (
@@ -165,11 +125,32 @@ export function BottleForm({
         </div>
 
         <div className="flex items-center justify-end space-x-4">
-          <Button size="xs" variant="secondary" onClick={() => setShow("")}>
+          <Button
+            size="xs"
+            variant="secondary"
+            type="button"
+            onClick={() => setOpenDialog(false)}
+          >
             Cancel
           </Button>
+          <Button
+            size="xs"
+            variant="destructive"
+            type="button"
+            onClick={() => setOpenDialog(false)}
+          >
+            Delete
+          </Button>
+          <Button
+            size="xs"
+            variant="secondary"
+            type="button"
+            onClick={() => setOpenDialog(false)}
+          >
+            Add
+          </Button>
           <Button size="xs" type="submit">
-            {formType === "A" ? "Add" : "Edit"}
+            Edit
           </Button>
         </div>
       </form>

@@ -20,13 +20,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Separator } from "./ui/separator";
 import { Input } from "./ui/input";
 import Search from "./Search";
 
 const Header = () => {
+  const [href, setHref] = useState("");
   const { theme, setTheme } = useTheme();
   const routes = [
     {
@@ -42,6 +43,13 @@ const Header = () => {
       label: "Test",
     },
   ];
+  useEffect(() => {
+    setHref(`/bottle/${Math.random().toString(36).slice(-5)}`);
+  }, []);
+
+  const handleClick = () => {
+    setHref(`/bottle/${Math.random().toString(36).slice(-5)}`);
+  };
 
   return (
     <header className="sm:flex sm:justify-between py-3 px-4 border-b">
@@ -109,7 +117,9 @@ const Header = () => {
                   <Link href="/">Home</Link>
                 </DropdownMenuItem> */}
                   <DropdownMenuItem asChild>
-                    <Link href="/test">Test</Link>
+                    <Link href={href} onClick={handleClick}>
+                      Cellar
+                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

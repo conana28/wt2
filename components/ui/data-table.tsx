@@ -16,16 +16,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
+import { Button } from "./button";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  onSelectedRowsChange?: (rows: TData[]) => void;
 }
 
-// export function DataTable<TData, TValue, onSelectedRowsChange>({
-export function DataTable<TData, TValue>({
+export function DataTable<TData, TValue, onSelectedRowsChange>({
+  // export function DataTable<TData, TValue>({
   columns,
   data,
+  onSelectedRowsChange = () => {},
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({}); // Row Selection
   const table = useReactTable({
@@ -37,6 +40,12 @@ export function DataTable<TData, TValue>({
       rowSelection, // Row selection
     },
   });
+
+  useEffect(() => {
+    onSelectedRowsChange(
+      table.getSelectedRowModel().flatRows.map((row) => row.original)
+    );
+  }, [rowSelection, table, onSelectedRowsChange]);
 
   return (
     <div className="rounded-md border">
@@ -82,10 +91,19 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      <div className="flex-1 text-sm text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
-      </div>
+      {table.getFilteredSelectedRowModel().rows.length > 0 && (
+        <div className="flex-1 text-sm text-muted-foreground">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.{" "}
+          <Button
+            size="xs"
+            className="pl:2"
+            onClick={() => table.setRowSelection({})}
+          >
+            Clear
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
